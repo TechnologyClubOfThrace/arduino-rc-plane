@@ -27,6 +27,8 @@ struct payload_t {  // Structure of our payload
   unsigned long counter;
   unsigned int  elevator;
   unsigned int  rudder;
+  // unsigned float BatteryVoltage;
+  // unsigned float x,y,z;
 };
 
 void setup(void) {
