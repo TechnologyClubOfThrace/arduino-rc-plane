@@ -14,18 +14,14 @@
  */
 #include <Servo.h>
 #include <SPI.h>
+#include <nRF24L01.h>
 #include <RF24.h>
-#include <RF24Network.h>
 
 
 RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
 
 Servo servo;
 Servo rudder_servo;
-
-RF24Network network(radio);      // Network uses that radio
-const uint16_t this_node = 00;   // Address of our node in Octal format (04, 031, etc)
-const uint16_t other_node = 01;  // Address of the other node in Octal format
 
 struct payload_t {  // Structure of our payload
   unsigned long ms;
@@ -42,14 +38,21 @@ void setup(void) {
   }
   Serial.println(F("RF24Network/examples/helloworld_rx/"));
 
+  //radio.setPALevel(RF24_PA_LOW);
+
   if (!radio.begin()) {
     Serial.println(F("Radio hardware not responding!"));
     while (1) {
       // hold in infinite loop
     }
   }
+
+  radio.setDataRate(RF24_250KBPS);
+  radio.setPALevel(RF24_PA_LOW);
   radio.setChannel(87);
-  network.begin(/*node address*/ this_node);
+  radio.setPayloadSize(sizeof(struct payload_t)); 
+  radio.openReadingPipe(1, 0xF0F0F0F0E1LL);  // Set the receiving pipe address
+  radio.startListening();
 
   //Include the servo motor pin
   servo.attach(3);
@@ -57,17 +60,13 @@ void setup(void) {
 }
 
 void loop(void) {
-
-  network.update();  // Check the network regularly
-
-  while (network.available()) {  // Is there anything ready for us?
-
-    RF24NetworkHeader header;  // If so, grab it and print it out
+  while (radio.available()) {  // Is there anything ready for us?
+// If so, grab it and print it out
     payload_t payload;
-    network.read(header, &payload, sizeof(payload));
+    radio.read(&payload, sizeof(payload));
     Serial.print(F("Received packet: counter="));
     Serial.print(payload.counter);
-    Serial.print(F(", elevator="));
+    Serial.print(F(", elevator 000="));
     Serial.print(payload.elevator);
     Serial.print(F(", rudder="));
     Serial.print(payload.rudder);

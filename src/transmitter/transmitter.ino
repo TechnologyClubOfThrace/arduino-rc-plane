@@ -7,16 +7,11 @@
  */
 
 #include <SPI.h>
+#include <nRF24L01.h>
 #include <RF24.h>
-#include <RF24Network.h>
 
 //CE_PIN, CSN_PIN)
 RF24 radio(9, 8);  // nRF24L01(+) radio attached
-
-RF24Network network(radio);  // Network uses that radio
-
-const uint16_t this_node = 01;   // Address of our node in Octal format
-const uint16_t other_node = 00;  // Address of the other node in Octal format
 
 unsigned long last_sent;     // When did we last send?
 unsigned long packets_sent;  // How many have we sent already
@@ -31,12 +26,16 @@ struct payload_t {  // Structure of our payload
   // unsigned float x,y,z;
 };
 
+uint8_t payload_size = sizeof(struct payload_t);
+
 void setup(void) {
   Serial.begin(115200);
   while (!Serial) {
     // some boards need this because of native USB capability
   }
   Serial.println(F("RF TX Begin Setup"));
+
+  //radio.setPALevel(RF24_PA_LOW);
 
   if (!radio.begin()) {
     Serial.println(F("Radio hardware not responding!"));
@@ -46,17 +45,17 @@ void setup(void) {
       // hold in infinite loop
     }
   }
-  //radio.setDataRate( RF24_250KBPS );
+  radio.setDataRate(RF24_250KBPS);
+  radio.setPALevel(RF24_PA_LOW);
   radio.setChannel(87);
-  network.begin(/*node address*/ this_node);
+  radio.setPayloadSize(payload_size); 
+  radio.openWritingPipe(0xF0F0F0F0E1LL); // Set the transmitting pipe address
 }
 
 int last_map_value = -1;
 int last_rudder_value = -1;
 
 void loop() {
-
-  network.update();
 
   unsigned long now = millis();
   
@@ -77,8 +76,7 @@ void loop() {
 
     Serial.print(F("Sending... "));
     payload_t payload = { millis(), packets_sent++, map_value, map_rudder_value };
-    RF24NetworkHeader header(/*to node*/ other_node);
-    bool ok = network.write(header, &payload, sizeof(payload));
+    bool ok = radio.write(&payload, payload_size);
     Serial.println(ok ? F("ok.") : F("failed."));
   }
 }
