@@ -17,19 +17,13 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
+#include "payload.hpp"
+
 
 RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
 
 Servo servo;
 Servo rudder_servo;
-
-struct payload_t {  // Structure of our payload
-  unsigned long ms;
-  unsigned long counter;
-  unsigned int elevator;
-  unsigned int rudder;
-};
-
 
 void setup(void) {
   Serial.begin(115200);

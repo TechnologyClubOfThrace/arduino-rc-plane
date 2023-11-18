@@ -7,6 +7,7 @@
  */
 
 #include "potentiometer.hpp"
+#include "payload.hpp"
 
 #include <SPI.h>
 #include <nRF24L01.h>
@@ -17,18 +18,6 @@ RF24 radio(9, 8);  // nRF24L01(+) radio attached
 
 unsigned long last_sent;     // When did we last send?
 unsigned long packets_sent;  // How many have we sent already
-
-
-struct payload_t {  // Structure of our payload
-  unsigned long  ms;
-  unsigned long counter;
-  unsigned int  elevator;
-  unsigned int  rudder;
-  // unsigned float BatteryVoltage;
-  // unsigned float x,y,z;
-};
-
-uint8_t payload_size = sizeof(struct payload_t);
 
 void setup(void) {
   Serial.begin(115200);

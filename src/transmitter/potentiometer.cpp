@@ -25,12 +25,12 @@ void Potentiometer::read()
   }
 }
 
-int Potentiometer::get_value()
+int Potentiometer::get_value() const
 {
   return _value;
 }
 
-bool Potentiometer::is_dirty()
+bool Potentiometer::is_dirty() const
 {
   return _is_dirty;
 }
