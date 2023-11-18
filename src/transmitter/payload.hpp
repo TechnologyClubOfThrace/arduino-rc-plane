@@ -12,8 +12,6 @@
 #define DEBUG(x)
 #endif
 
-const byte PIPE_ADDRESS[5] = {'S', 'T', 'T', 'H', '1'};
-
 struct payload_t {  // Structure of our payload
   unsigned long  ms;
   unsigned long counter;

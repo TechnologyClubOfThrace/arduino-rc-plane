@@ -8,6 +8,7 @@
 
 #include "potentiometer.hpp"
 #include "payload.hpp"
+#include "secrets.hpp"
 
 #include <SPI.h>
 #include <nRF24L01.h>

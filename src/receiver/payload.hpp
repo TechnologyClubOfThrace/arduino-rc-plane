@@ -5,9 +5,7 @@
  * ANY CHANGE ON THIS FILE SHOULD BE MANUALY SYNCED BETWEEN transmitter and receiver CODE
  * **************************************************************************************
  */
-
-const byte PIPE_ADDRESS[5] = {'S', 'T', 'T', 'H', '1'};
-
+ 
 struct payload_t {  // Structure of our payload
   unsigned long  ms;
   unsigned long counter;

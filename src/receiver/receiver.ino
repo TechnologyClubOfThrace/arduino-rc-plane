@@ -20,6 +20,7 @@
 #include "rc_servo.hpp"
 
 #include "payload.hpp"
+#include "secrets.hpp"
 
 RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
 
