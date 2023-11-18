@@ -6,6 +6,14 @@
  * **************************************************************************************
  */
 
+#ifdef DEBUG_FLAG
+#define DEBUG(x)  Serial.print (x)
+#else
+#define DEBUG(x)
+#endif
+
+const byte PIPE_ADDRESS[5] = {'S', 'T', 'T', 'H', '1'};
+
 struct payload_t {  // Structure of our payload
   unsigned long  ms;
   unsigned long counter;
@@ -15,4 +23,4 @@ struct payload_t {  // Structure of our payload
   // unsigned float x,y,z;
 };
 
-const uint8_t payload_size = sizeof(struct payload_t);
+const uint8_t PAYLOAD_SIZE = sizeof(struct payload_t);

@@ -16,9 +16,6 @@
 //CE_PIN, CSN_PIN)
 RF24 radio(9, 8);  // nRF24L01(+) radio attached
 
-unsigned long last_sent;     // When did we last send?
-unsigned long packets_sent;  // How many have we sent already
-
 void setup(void) {
   Serial.begin(115200);
   while (!Serial) {
@@ -39,8 +36,8 @@ void setup(void) {
   radio.setDataRate(RF24_250KBPS);
   radio.setPALevel(RF24_PA_LOW);
   radio.setChannel(87);
-  radio.setPayloadSize(payload_size); 
-  radio.openWritingPipe(0xF0F0F0F0E1LL); // Set the transmitting pipe address
+  radio.setPayloadSize(PAYLOAD_SIZE); 
+  radio.openWritingPipe(PIPE_ADDRESS); // Set the transmitting pipe address
 }
 
 int last_map_value = -1;
@@ -58,9 +55,6 @@ Potentiometer aileron_control(A6, A7); // roll
 
 
 void loop() {
-
-  unsigned long now = millis();
-
   throttle_control.read();
   rudder_control.read();
   elevator_control.read();
@@ -84,7 +78,6 @@ void loop() {
   int map_rudder_value = map(rudder_value, 0, 1024, 0, 180);
 
   if (last_map_value != map_value || last_rudder_value != map_rudder_value){
-    last_sent = now;
     last_map_value = map_value;
     last_rudder_value = map_rudder_value;
 
@@ -93,8 +86,8 @@ void loop() {
     Serial.println(map_value);  // Check the network regularly
 
     Serial.print(F("Sending... "));
-    payload_t payload = { millis(), packets_sent++, map_value, map_rudder_value };
-    bool ok = radio.write(&payload, payload_size);
+    payload_t payload = { 1, 1, map_value, map_rudder_value };
+    bool ok = radio.write(&payload, PAYLOAD_SIZE);
     Serial.println(ok ? F("ok.") : F("failed."));
   }
 }
