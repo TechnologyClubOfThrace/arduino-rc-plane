@@ -4,7 +4,9 @@
  *
  *
  * Rename secrets_example.hpp to secrets.hpp to use it inside the project
+ * and uncomment the required secret data after modifying it
+ *
  * ALLWAYS IGNORE secrets.hpp from git.
  */
 
-const byte PIPE_ADDRESS[5] = {'A', 'B', 'C', 'D', '1'};
+// const byte PIPE_ADDRESS[5] = {'A', 'B', 'C', 'D', '1'};

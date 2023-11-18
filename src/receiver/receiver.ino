@@ -1,17 +1,11 @@
 /**
  * Copyright (C) 2023 Technology Club Of Thrace <info@steth.gr>
  *
- *
+ * RC RECEIVER
  *
  * 
  */
 
-/**
- * Simplest possible example of using RF24Network,
- *
- * RECEIVER NODE
- * Listens for messages from the transmitter and prints them out.
- */
 #include <Servo.h>
 #include <SPI.h>
 #include <nRF24L01.h>

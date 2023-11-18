@@ -1,10 +1,18 @@
 /**
  * Copyright (C) 2023 Technology Club Of Thrace <info@steth.gr>
  *
- *
+ * RC TRANSMITTER
  *
  * 
  */
+
+#ifdef DEBUG_FLAG
+  #define DEBUG_PRINT   (x)  Serial.print   (x)
+  #define DEBUG_PRINTLN (x)  Serial.println (x)
+#else
+  #define DEBUG_PRINT   (x)
+  #define DEBUG_PRINTLN (x)
+#endif
 
 #include "potentiometer.hpp"
 #include "payload.hpp"

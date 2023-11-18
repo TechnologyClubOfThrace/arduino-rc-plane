@@ -6,12 +6,6 @@
  * **************************************************************************************
  */
 
-#ifdef DEBUG_FLAG
-#define DEBUG(x)  Serial.print (x)
-#else
-#define DEBUG(x)
-#endif
-
 struct payload_t {  // Structure of our payload
   unsigned long  ms;
   unsigned long counter;
