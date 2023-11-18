@@ -6,6 +6,8 @@
  * 
  */
 
+#include "potentiometer.hpp"
+
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
@@ -55,9 +57,36 @@ void setup(void) {
 int last_map_value = -1;
 int last_rudder_value = -1;
 
+/**
+* Ta controlls
+*
+*/
+Potentiometer throttle_control(A0, A1); // throtle
+Potentiometer rudder_control(A2, A3); //left/right
+
+Potentiometer elevator_control(A4, A5); //up/down
+Potentiometer aileron_control(A6, A7); // roll
+
+
 void loop() {
 
   unsigned long now = millis();
+
+  throttle_control.read();
+  rudder_control.read();
+  elevator_control.read();
+  aileron_control.read();
+
+  if (throttle_control.is_dirty() || rudder_control.is_dirty() || elevator_control.is_dirty() || aileron_control.is_dirty())
+  {
+    payload_t payload;
+    payload = (payload_t) {
+      .ms = millis(),
+      .counter = 1,
+      .elevator = elevator_control.get_value(),
+      .rudder   = rudder_control.get_value()
+    };
+  }
   
   int value = analogRead(A0);
   int rudder_value = analogRead(A1);
