@@ -10,18 +10,19 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-#define DEBUG_FLAG
+//#define DEBUG_FLAG
 
 #ifdef DEBUG_FLAG
   #define DEBUG_PRINT   (x)  Serial.print   (x)
   #define DEBUG_PRINTLN (x)  Serial.println (x)
 
+//RF24_PA_MIN = 0, RF24_PA_LOW, RF24_PA_HIGH, RF24_PA_MAX,
   const uint8_t RADIO_PA_LEVEL = RF24_PA_LOW;
 #else
   #define DEBUG_PRINT   (x)
   #define DEBUG_PRINTLN (x)
 
-  const uint8_t RADIO_PA_LEVEL = RF24_PA_LOW;
+  const uint8_t RADIO_PA_LEVEL = RF24_PA_MAX;
 #endif
 
 #include "potentiometer.hpp"
@@ -39,8 +40,6 @@ void setup(void) {
   }
   Serial.println(F("RF TX Begin Setup"));
 
-  //radio.setPALevel(RF24_PA_LOW);
-
   if (!radio.begin()) {
     Serial.println(F("Radio hardware not responding!"));
     while (1) {
@@ -56,18 +55,15 @@ void setup(void) {
   radio.openWritingPipe(SECRET_PIPE_ADDRESS); // Set the transmitting pipe address
 }
 
-int last_map_value = -1;
-int last_rudder_value = -1;
-
 /**
 * Ta controlls
 *
 */
-Potentiometer throttle_control(A0, A1); // throtle
-Potentiometer rudder_control(A2, A3); //left/right
+Potentiometer throttle_control(A0, 99); // throtle
+Potentiometer rudder_control(A2, 99); //left/right
 
-Potentiometer elevator_control(A4, A5); //up/down
-Potentiometer aileron_control(A6, A7); // roll
+Potentiometer elevator_control(A4, 99); //up/down
+Potentiometer aileron_control(A6, 99); // roll
 
 
 void loop() {
@@ -80,29 +76,13 @@ void loop() {
   {
     payload_t payload;
     payload = (payload_t) {
-      .ms = millis(),
-      .counter = 1,
+      .throttle = throttle_control.get_value(),
+      .rudder   = rudder_control.get_value(),
       .elevator = elevator_control.get_value(),
-      .rudder   = rudder_control.get_value()
+      .aileron  = aileron_control.get_value(),
     };
-  }
-  
-  int value = analogRead(A0);
-  int rudder_value = analogRead(A1);
-
-  int map_value = map(value, 0, 1024, 0, 180);
-  int map_rudder_value = map(rudder_value, 0, 1024, 0, 180);
-
-  if (last_map_value != map_value || last_rudder_value != map_rudder_value){
-    last_map_value = map_value;
-    last_rudder_value = map_rudder_value;
-
-    //Convert these values from 0 to 180
-    //Print these values on the serial monitor
-    Serial.println(map_value);  // Check the network regularly
 
     Serial.print(F("Sending... "));
-    payload_t payload = { 1, 1, map_value, map_rudder_value };
     bool ok = radio.write(&payload, PAYLOAD_SIZE);
     Serial.println(ok ? F("ok.") : F("failed."));
   }

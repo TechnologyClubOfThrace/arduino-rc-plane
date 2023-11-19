@@ -15,6 +15,7 @@ Potentiometer::Potentiometer (uint8_t value_pin, uint8_t trim_pin) : _value_pin(
 void Potentiometer::read()
 {
   long mapped_trim_value = map(analogRead(_trim_pin), 0, 1023, -300, 300);
+  if (_trim_pin >= 99) mapped_trim_value = 0;
 
   _value = constrain(analogRead(_value_pin) + mapped_trim_value, 0, 1023);
 

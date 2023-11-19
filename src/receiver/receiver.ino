@@ -16,19 +16,18 @@
 #include "payload.hpp"
 #include "secrets.hpp"
 
-RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
+const uint8_t RADIO_PA_LEVEL = RF24_PA_MAX;
 
-Servo servo;
-Servo rudder_servo;
+RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
 
 /**
 * The servo controlling the plane
 *
 */
-RCServo throttle_servo(A0);
-RCServo rudder_servo2(A1);
-RCServo elevator_servo(A2);
-RCServo aileron_servo(A3);
+RCServo throttle_servo (3, 0,  120);
+RCServo rudder_servo   (2, 0, 180);
+RCServo elevator_servo (4, 0, 180);
+RCServo aileron_servo  (5, 0 ,180);
 
 void setup(void) {
   Serial.begin(115200);
@@ -36,8 +35,6 @@ void setup(void) {
     // some boards need this because of native USB capability
   }
   Serial.println(F("RF24Network/examples/helloworld_rx/"));
-
-  //radio.setPALevel(RF24_PA_LOW);
 
   if (!radio.begin()) {
     Serial.println(F("Radio hardware not responding!"));
@@ -47,22 +44,17 @@ void setup(void) {
   }
 
   radio.setDataRate(RF24_250KBPS);
-  radio.setPALevel(RF24_PA_LOW);
+  radio.setPALevel(RADIO_PA_LEVEL);
   radio.setChannel(SECRET_RADIO_CHANNEL);
   radio.setPayloadSize(PAYLOAD_SIZE); 
   radio.openReadingPipe(1, SECRET_PIPE_ADDRESS);  // Set the receiving pipe address
   radio.startListening();
 
-  //Include the servo motor pin
-  servo.attach(3);
-  rudder_servo.attach(2);
-
   // Attach servo and check if everything is ok
-  /*
   if
   (
     throttle_servo.attach() == INVALID_SERVO ||
-    rudder_servo2.attach()  == INVALID_SERVO ||
+    rudder_servo.attach()   == INVALID_SERVO ||
     elevator_servo.attach() == INVALID_SERVO ||
     aileron_servo.attach()  == INVALID_SERVO
   ){
@@ -71,7 +63,7 @@ void setup(void) {
       delay(1000);
     }
   }
-  */
+  
 
 }
 
@@ -80,21 +72,23 @@ void loop(void) {
 // If so, grab it and print it out
     payload_t payload;
     radio.read(&payload, PAYLOAD_SIZE);
-    Serial.print(F("Received packet: counter="));
-    Serial.print(payload.counter);
-    Serial.print(F(", elevator 000="));
-    Serial.print(payload.elevator);
-    Serial.print(F(", rudder="));
-    Serial.print(payload.rudder);
-    Serial.print(F(", origin timestamp="));
-    Serial.println(payload.ms);
 
-    //Write these values on the servo
-    servo.write(payload.elevator);
+    //Serial.print(F(", rudder="));
+    //Serial.println(payload.rudder);
+
+    Serial.print(F(", throttle="));
+    Serial.println(payload.throttle);
+
+    //Serial.print(F(", elevator="));
+    //Serial.print(payload.elevator);
+
+    //Serial.print(F(", aileron="));
+    //Serial.println(payload.aileron);
+
+    throttle_servo.write(payload.throttle);
     rudder_servo.write(payload.rudder);
-
-    //throttle_servo.write(123);
-
+    elevator_servo.write(payload.elevator);
+    aileron_servo.write(payload.aileron);
 
   }
 }

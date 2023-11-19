@@ -7,6 +7,7 @@
  */
 
 #include <stdint.h>
+#include <limits.h>
 
 class Potentiometer
 {
@@ -15,6 +16,7 @@ class Potentiometer
     void read();
     int  get_value() const;
     bool is_dirty()  const;
+    //static const uint8_t TRIM_DISABLED = numeric_limits<uint8_t>::max();
   
   private:
     uint8_t _value_pin; // the pin the potentiometer is connected to on board

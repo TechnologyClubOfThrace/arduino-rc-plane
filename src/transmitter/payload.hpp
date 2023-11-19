@@ -7,12 +7,10 @@
  */
 
 struct payload_t {  // Structure of our payload
-  unsigned long  ms;
-  unsigned long counter;
-  unsigned int  elevator;
-  unsigned int  rudder;
-  // unsigned float BatteryVoltage;
-  // unsigned float x,y,z;
+  unsigned int throttle;
+  unsigned int rudder;
+  unsigned int elevator;
+  unsigned int aileron;
 };
 
 const uint8_t PAYLOAD_SIZE = sizeof(struct payload_t);
