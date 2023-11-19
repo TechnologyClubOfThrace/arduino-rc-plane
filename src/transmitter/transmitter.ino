@@ -6,6 +6,8 @@
  * 
  */
 
+ //TODO: -use DEBUG_PRINT, -abs, 
+
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
@@ -48,6 +50,7 @@ void setup(void) {
       // hold in infinite loop
     }
   }
+
   radio.setDataRate(RF24_250KBPS);
   radio.setPALevel(RADIO_PA_LEVEL);
   radio.setChannel(SECRET_RADIO_CHANNEL);
@@ -59,11 +62,11 @@ void setup(void) {
 * Ta controlls
 *
 */
-Potentiometer throttle_control(A0, 99); // throtle
-Potentiometer rudder_control(A2, 99); //left/right
+Potentiometer throttle_control(A0, Potentiometer::TRIM_DISABLED); // throtle
+Potentiometer rudder_control  (A2, Potentiometer::TRIM_DISABLED); //left/right
 
-Potentiometer elevator_control(A4, 99); //up/down
-Potentiometer aileron_control(A6, 99); // roll
+Potentiometer elevator_control(A4, Potentiometer::TRIM_DISABLED); //up/down
+Potentiometer aileron_control (A6, Potentiometer::TRIM_DISABLED); // roll
 
 
 void loop() {

@@ -6,6 +6,8 @@
  * 
  */
 
+//TODO: -use DEBUG_PRINT
+
 #include <Servo.h>
 #include <SPI.h>
 #include <nRF24L01.h>
@@ -24,7 +26,7 @@ RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
 * The servo controlling the plane
 *
 */
-RCServo throttle_servo (3, 0,  120);
+RCServo throttle_servo (3, 0, 120);
 RCServo rudder_servo   (2, 0, 180);
 RCServo elevator_servo (4, 0, 180);
 RCServo aileron_servo  (5, 0 ,180);
@@ -63,8 +65,6 @@ void setup(void) {
       delay(1000);
     }
   }
-  
-
 }
 
 void loop(void) {
@@ -73,16 +73,16 @@ void loop(void) {
     payload_t payload;
     radio.read(&payload, PAYLOAD_SIZE);
 
-    //Serial.print(F(", rudder="));
+    //Serial.print(F("rudder="));
     //Serial.println(payload.rudder);
 
-    Serial.print(F(", throttle="));
+    Serial.print(F("throttle="));
     Serial.println(payload.throttle);
 
-    //Serial.print(F(", elevator="));
+    //Serial.print(F("elevator="));
     //Serial.print(payload.elevator);
 
-    //Serial.print(F(", aileron="));
+    //Serial.print(F("aileron="));
     //Serial.println(payload.aileron);
 
     throttle_servo.write(payload.throttle);
