@@ -6,21 +6,28 @@
  * 
  */
 
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+#define DEBUG_FLAG
+
 #ifdef DEBUG_FLAG
   #define DEBUG_PRINT   (x)  Serial.print   (x)
   #define DEBUG_PRINTLN (x)  Serial.println (x)
+
+  const uint8_t RADIO_PA_LEVEL = RF24_PA_LOW;
 #else
   #define DEBUG_PRINT   (x)
   #define DEBUG_PRINTLN (x)
+
+  const uint8_t RADIO_PA_LEVEL = RF24_PA_LOW;
 #endif
 
 #include "potentiometer.hpp"
 #include "payload.hpp"
 #include "secrets.hpp"
 
-#include <SPI.h>
-#include <nRF24L01.h>
-#include <RF24.h>
 
 //CE_PIN, CSN_PIN)
 RF24 radio(9, 8);  // nRF24L01(+) radio attached
@@ -43,10 +50,10 @@ void setup(void) {
     }
   }
   radio.setDataRate(RF24_250KBPS);
-  radio.setPALevel(RF24_PA_LOW);
-  radio.setChannel(87);
+  radio.setPALevel(RADIO_PA_LEVEL);
+  radio.setChannel(SECRET_RADIO_CHANNEL);
   radio.setPayloadSize(PAYLOAD_SIZE); 
-  radio.openWritingPipe(PIPE_ADDRESS); // Set the transmitting pipe address
+  radio.openWritingPipe(SECRET_PIPE_ADDRESS); // Set the transmitting pipe address
 }
 
 int last_map_value = -1;

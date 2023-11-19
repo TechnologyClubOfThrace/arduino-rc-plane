@@ -48,9 +48,9 @@ void setup(void) {
 
   radio.setDataRate(RF24_250KBPS);
   radio.setPALevel(RF24_PA_LOW);
-  radio.setChannel(87);
+  radio.setChannel(SECRET_RADIO_CHANNEL);
   radio.setPayloadSize(PAYLOAD_SIZE); 
-  radio.openReadingPipe(1, PIPE_ADDRESS);  // Set the receiving pipe address
+  radio.openReadingPipe(1, SECRET_PIPE_ADDRESS);  // Set the receiving pipe address
   radio.startListening();
 
   //Include the servo motor pin

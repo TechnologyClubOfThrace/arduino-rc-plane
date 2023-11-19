@@ -10,3 +10,4 @@
  */
 
 // const byte PIPE_ADDRESS[5] = {'A', 'B', 'C', 'D', '1'};
+// const uint8_t SECRET_RADIO_CHANNEL = 87;
