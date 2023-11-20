@@ -9,8 +9,8 @@ class RCServo
     void write(int value) const; 
 
   private:
-    Servo _servo;
-    int _pin; // the pin the servo is connected on board 
-    long _to_low;
-    long _to_high;
+    const Servo _servo;
+    const int _pin; // the pin the servo is connected on board 
+    const long _to_low;
+    const long _to_high;
 };

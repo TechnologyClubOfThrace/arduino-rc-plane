@@ -89,6 +89,5 @@ void loop(void) {
     rudder_servo.write(payload.rudder);
     elevator_servo.write(payload.elevator);
     aileron_servo.write(payload.aileron);
-
   }
 }
