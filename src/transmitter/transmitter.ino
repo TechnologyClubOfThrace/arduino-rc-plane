@@ -6,47 +6,50 @@
  * 
  */
 
- //TODO: -use DEBUG_PRINT, -abs, 
-
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-
-//#define DEBUG_FLAG
-
-#ifdef DEBUG_FLAG
-  #define DEBUG_PRINT   (x)  Serial.print   (x)
-  #define DEBUG_PRINTLN (x)  Serial.println (x)
-
-//RF24_PA_MIN = 0, RF24_PA_LOW, RF24_PA_HIGH, RF24_PA_MAX,
-  const uint8_t RADIO_PA_LEVEL = RF24_PA_LOW;
-#else
-  #define DEBUG_PRINT   (x)
-  #define DEBUG_PRINTLN (x)
-
-  const uint8_t RADIO_PA_LEVEL = RF24_PA_MAX;
-#endif
-
+#include <printf.h> // required for radio.printDetails
 #include "potentiometer.hpp"
 #include "payload.hpp"
 #include "secrets.hpp"
 
+//#define DEBUG_FLAG
+
+#ifdef DEBUG_FLAG
+  #define DEBUG_PRINT(x)  Serial.print(x)
+  #define DEBUG_PRINTLN(x)  Serial.println(x)
+
+//RF24_PA_MIN = 0, RF24_PA_LOW, RF24_PA_HIGH, RF24_PA_MAX,
+  const uint8_t RADIO_PA_LEVEL = RF24_PA_LOW;
+#else
+  #define DEBUG_PRINT(x)
+  #define DEBUG_PRINTLN(x)
+
+  const uint8_t RADIO_PA_LEVEL = RF24_PA_MAX;
+#endif
+
 
 //CE_PIN, CSN_PIN)
 RF24 radio(9, 8);  // nRF24L01(+) radio attached
+
+const int BUZZER_PIN = PD2;
 
 void setup(void) {
   Serial.begin(115200);
   while (!Serial) {
     // some boards need this because of native USB capability
   }
-  Serial.println(F("RF TX Begin Setup"));
+
+  Serial.println("Init buzzer");
+  pinMode(BUZZER_PIN,OUTPUT);
+
+  Serial.println("RF TX Begin Setup");
 
   if (!radio.begin()) {
-    Serial.println(F("Radio hardware not responding!"));
+    Serial.println("Radio hardware not responding!");
     while (1) {
       delay(1000);
-      Serial.println(F("Radio hardware not responding!"));
       // hold in infinite loop
     }
   }
@@ -56,17 +59,26 @@ void setup(void) {
   radio.setChannel(SECRET_RADIO_CHANNEL);
   radio.setPayloadSize(PAYLOAD_SIZE); 
   radio.openWritingPipe(SECRET_PIPE_ADDRESS); // Set the transmitting pipe address
+
+  printf_begin(); // required for radio.printDetails
+  Serial.println("\n\n >>>>>>>>>  printPrettyDetails <<<<<<<<");
+  radio.printPrettyDetails(); 
+  Serial.println("\n\n");
+  Serial.println(" >>>>>>>>>  printDetails <<<<<<<<");
+  radio.printDetails();
+
+  Serial.println("\n\nRF TX End Setup");
 }
 
 /**
 * Ta controlls
 *
 */
-Potentiometer throttle_control(A0, Potentiometer::TRIM_DISABLED); // throtle
-Potentiometer rudder_control  (A2, Potentiometer::TRIM_DISABLED); //left/right
+Potentiometer throttle_control(A0, A1, Polarity::possitive); // throtle
+Potentiometer rudder_control  (A2, A3, Polarity::negative); //left/right
 
-Potentiometer elevator_control(A4, Potentiometer::TRIM_DISABLED); //up/down
-Potentiometer aileron_control (A6, Potentiometer::TRIM_DISABLED); // roll
+Potentiometer elevator_control(A4, A5, Polarity::possitive); //up/down
+Potentiometer aileron_control (A6, A7, Polarity::negative); // roll
 
 
 void loop() {
@@ -85,8 +97,11 @@ void loop() {
       .aileron  = aileron_control.get_value(),
     };
 
-    Serial.print(F("Sending... "));
+    DEBUG_PRINTLN("Sending... ");
     bool ok = radio.write(&payload, PAYLOAD_SIZE);
-    Serial.println(ok ? F("ok.") : F("failed."));
+    DEBUG_PRINTLN(ok ? "ok." : "failed.");
+    if(!ok){
+      tone(BUZZER_PIN, 133500, 200);
+    }
   }
 }

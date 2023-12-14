@@ -6,19 +6,29 @@
  * 
  */
 
-//TODO: -use DEBUG_PRINT
-
 #include <Servo.h>
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-
+#include <printf.h> // required for radio.printDetails
 #include "rc_servo.hpp"
-
 #include "payload.hpp"
 #include "secrets.hpp"
 
-const uint8_t RADIO_PA_LEVEL = RF24_PA_MAX;
+//#define DEBUG_FLAG
+
+#ifdef DEBUG_FLAG
+  #define DEBUG_PRINT(x)  Serial.print(x)
+  #define DEBUG_PRINTLN(x)  Serial.println(x)
+
+//RF24_PA_MIN = 0, RF24_PA_LOW, RF24_PA_HIGH, RF24_PA_MAX,
+  const uint8_t RADIO_PA_LEVEL = RF24_PA_LOW;
+#else
+  #define DEBUG_PRINT(x)
+  #define DEBUG_PRINTLN(x)
+
+  const uint8_t RADIO_PA_LEVEL = RF24_PA_MAX;
+#endif
 
 RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
 
@@ -36,11 +46,12 @@ void setup(void) {
   while (!Serial) {
     // some boards need this because of native USB capability
   }
-  Serial.println(F("RF24Network/examples/helloworld_rx/"));
+  Serial.println("RF TX Begin Setup");
 
   if (!radio.begin()) {
-    Serial.println(F("Radio hardware not responding!"));
+    Serial.println("Radio hardware not responding!");
     while (1) {
+      delay(1000);
       // hold in infinite loop
     }
   }
@@ -52,6 +63,13 @@ void setup(void) {
   radio.openReadingPipe(1, SECRET_PIPE_ADDRESS);  // Set the receiving pipe address
   radio.startListening();
 
+  printf_begin(); // required for radio.printDetails
+  Serial.println("\n\n >>>>>>>>>  printPrettyDetails <<<<<<<<");
+  radio.printPrettyDetails(); 
+  Serial.println("\n\n");
+  Serial.println(" >>>>>>>>>  printDetails <<<<<<<<");
+  radio.printDetails();
+
   // Attach servo and check if everything is ok
   if
   (
@@ -61,10 +79,12 @@ void setup(void) {
     aileron_servo.attach()  == INVALID_SERVO
   ){
     while (1) {
-      Serial.println(F("Servo not responding!"));  // hold in infinite loop
+      Serial.println("Servo not responding!");  // hold in infinite loop
       delay(1000);
     }
   }
+
+  Serial.println("\n\nRF RX End Setup");
 }
 
 void loop(void) {
@@ -76,14 +96,14 @@ void loop(void) {
     //Serial.print(F("rudder="));
     //Serial.println(payload.rudder);
 
-    Serial.print(F("throttle="));
-    Serial.println(payload.throttle);
+    DEBUG_PRINT("throttle=");
+    DEBUG_PRINTLN(payload.throttle);
 
-    //Serial.print(F("elevator="));
-    //Serial.print(payload.elevator);
+    //DEBUG_PRINT("elevator=");
+    //DEBUG_PRINTLN(payload.elevator);
 
-    //Serial.print(F("aileron="));
-    //Serial.println(payload.aileron);
+    //DEBUG_PRINT("aileron=");
+    //DEBUG_PRINTLN(payload.aileron);
 
     throttle_servo.write(payload.throttle);
     rudder_servo.write(payload.rudder);

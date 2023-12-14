@@ -1,0 +1,1 @@
+enum class Polarity { possitive = 1, negative = -1 };
