@@ -7,6 +7,7 @@ class RCServo
     RCServo(int pin, long to_low, long to_high); // constructor
     uint8_t  attach() const;
     void write(int value) const; 
+    void writeMicroseconds(int value) const; 
 
   private:
     const Servo _servo;

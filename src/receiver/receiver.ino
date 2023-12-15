@@ -36,7 +36,7 @@ RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
 * The servo controlling the plane
 *
 */
-RCServo throttle_servo (3, 0, 120);
+RCServo throttle_servo (3, 1000, 2000);
 RCServo rudder_servo   (2, 0, 180);
 RCServo elevator_servo (4, 0, 180);
 RCServo aileron_servo  (5, 0 ,180);
@@ -105,7 +105,7 @@ void loop(void) {
     //DEBUG_PRINT("aileron=");
     //DEBUG_PRINTLN(payload.aileron);
 
-    throttle_servo.write(payload.throttle);
+    throttle_servo.writeMicroseconds(payload.throttle);
     rudder_servo.write(payload.rudder);
     elevator_servo.write(payload.elevator);
     aileron_servo.write(payload.aileron);

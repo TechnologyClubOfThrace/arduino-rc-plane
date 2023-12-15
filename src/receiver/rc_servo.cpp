@@ -12,3 +12,8 @@ void RCServo::write(int value) const
 {
   _servo.write(map(value, 0, 1024, _to_low, _to_high));
 }
+
+void RCServo::writeMicroseconds(int value) const
+{
+  _servo.writeMicroseconds(map(value, 0, 1024, _to_low, _to_high));
+}
