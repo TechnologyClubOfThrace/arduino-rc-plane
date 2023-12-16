@@ -32,14 +32,24 @@
 
 RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
 
+// Customize here pulse lengths as needed on the ESC docs
+const int MIN_THROTTLE_PULSE_LENGTH = 1000; // Minimum pulse length in µs
+const int MAX_THROTTLE_PULSE_LENGTH = 2000; // Maximum pulse length in µs
+
+// Customize here the servo angle as needed on the servo docs
+const int MIN_SERVO_ANGLE = 0; // Minimum servo angle
+const int MAX_SERVO_ANGLE = 180; // Maximum servo angle
+
 /**
 * The servo controlling the plane
+* On the throttle_servo we write pulse width microseconds 1000-2000.
+* On the other servo we write an angle 0-180
 *
 */
-RCServo throttle_servo (3, 1000, 2000);
-RCServo rudder_servo   (2, 0, 180);
-RCServo elevator_servo (4, 0, 180);
-RCServo aileron_servo  (5, 0 ,180);
+RCServo throttle_servo (3, MIN_THROTTLE_PULSE_LENGTH, MAX_THROTTLE_PULSE_LENGTH);
+RCServo rudder_servo   (2, MIN_SERVO_ANGLE,           MAX_SERVO_ANGLE);
+RCServo elevator_servo (4, MIN_SERVO_ANGLE,           MAX_SERVO_ANGLE);
+RCServo aileron_servo  (5, MIN_SERVO_ANGLE,           MAX_SERVO_ANGLE);
 
 void setup(void) {
   Serial.begin(115200);
