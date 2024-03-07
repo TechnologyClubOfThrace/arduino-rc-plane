@@ -1,6 +1,6 @@
 /**
  * Copyright (C) 2023 Technology Club Of Thrace <info@steth.gr>
- *
+ * Users/yiannis/Projects/arduino-rc-plane/src/transmitter/payload.hpp
  * **************************************************************************************
  * ANY CHANGE ON THIS FILE SHOULD BE MANUALY SYNCED BETWEEN transmitter and receiver CODE
  * **************************************************************************************

@@ -27,7 +27,7 @@
   #define DEBUG_PRINT(x)
   #define DEBUG_PRINTLN(x)
 
-  const uint8_t RADIO_PA_LEVEL = RF24_PA_MAX;
+  const uint8_t RADIO_PA_LEVEL = RF24_PA_LOW;
 #endif
 
 RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
