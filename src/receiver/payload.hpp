@@ -6,6 +6,8 @@
  * **************************************************************************************
  */
 
+//TODO: na to ylopoiisw me uint16_t anti gia int wste na eimaste panta sigouroi
+//gia to payload size, aneksartita apo tin ylopoiisi sto hardware
 struct payload_t {  // Structure of our payload
   unsigned int throttle;
   unsigned int rudder;

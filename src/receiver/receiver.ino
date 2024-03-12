@@ -66,7 +66,8 @@ void setup(void) {
     }
   }
 
-  radio.setDataRate(RF24_250KBPS);
+  //radio.setDataRate(RF24_250KBPS);
+  radio.setDataRate(RF24_1MBPS);
   radio.setPALevel(RADIO_PA_LEVEL);
   radio.setChannel(SECRET_RADIO_CHANNEL);
   radio.setPayloadSize(PAYLOAD_SIZE); 
@@ -98,7 +99,7 @@ void setup(void) {
 }
 
 void loop(void) {
-  while (radio.available()) {  // Is there anything ready for us?
+  while (radio.available()) {  // Is there anything ready for us? //TODO: na perasw to pipe ws parametro?
 // If so, grab it and print it out
     payload_t payload;
     radio.read(&payload, PAYLOAD_SIZE);

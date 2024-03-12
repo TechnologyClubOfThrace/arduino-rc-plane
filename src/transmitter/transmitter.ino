@@ -54,7 +54,8 @@ void setup(void) {
     }
   }
 
-  radio.setDataRate(RF24_250KBPS);
+  //radio.setDataRate(RF24_250KBPS);
+  radio.setDataRate(RF24_1MBPS);
   radio.setPALevel(RADIO_PA_LEVEL);
   radio.setChannel(SECRET_RADIO_CHANNEL);
   radio.setPayloadSize(PAYLOAD_SIZE); 
@@ -104,4 +105,5 @@ void loop() {
       tone(BUZZER_PIN, 133500, 200);
     }
   }
+  // Na dokimasw delay h megalytero threshold sto is_dirty h kai ta dyo.
 }
