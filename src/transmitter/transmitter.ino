@@ -86,7 +86,12 @@ Potentiometer elevator_control(A4, A5, Polarity::possitive); //up/down
 Potentiometer aileron_control (A6, A7, Polarity::negative); // roll
 
 
-// Counts the dropped packets
+/** 
+* Counts the dropped packets.
+* Each time radio.write fails, the dropped_packets counter is increased by 1.
+* If the dropped_packets are above the DROPPED_PACKETS_THRESHOLD then the beeper beeps
+* to inform the user that the conection is starting experiencing issues.
+*/
 int dropped_packets = 0;
 const int DROPPED_PACKETS_THRESHOLD = 5;
 
