@@ -54,8 +54,8 @@ void setup(void) {
     }
   }
 
-  //radio.setDataRate(RF24_250KBPS);
-  radio.setDataRate(RF24_1MBPS);
+  radio.setDataRate(RF24_250KBPS);
+  //radio.setDataRate(RF24_1MBPS);
   radio.setPALevel(RADIO_PA_LEVEL);
   radio.setChannel(SECRET_RADIO_CHANNEL);
   radio.setPayloadSize(PAYLOAD_SIZE); 
@@ -69,6 +69,10 @@ void setup(void) {
   radio.printDetails();
 
   Serial.println("\n\nRF TX End Setup");
+
+  tone(BUZZER_PIN, 133500, 100);
+  delay(200);
+  tone(BUZZER_PIN, 133500, 100);
 }
 
 /**
@@ -81,6 +85,10 @@ Potentiometer rudder_control  (A2, A3, Polarity::negative); //left/right
 Potentiometer elevator_control(A4, A5, Polarity::possitive); //up/down
 Potentiometer aileron_control (A6, A7, Polarity::negative); // roll
 
+
+// Counts the dropped packets
+int dropped_packets = 0;
+const int DROPPED_PACKETS_THRESHOLD = 5;
 
 void loop() {
   throttle_control.read();
@@ -102,8 +110,16 @@ void loop() {
     bool ok = radio.write(&payload, PAYLOAD_SIZE);
     DEBUG_PRINTLN(ok ? "ok." : "failed.");
     if(!ok){
-      tone(BUZZER_PIN, 133500, 200);
+      dropped_packets++;
+      //Serial.println(dropped_packets);
+      if(dropped_packets > DROPPED_PACKETS_THRESHOLD){
+        dropped_packets = 0;
+        tone(BUZZER_PIN, 133500, 200);
+      }
+    } else {
+      if (dropped_packets != 0) dropped_packets = 0;
     }
+
   }
   // Na dokimasw delay h megalytero threshold sto is_dirty h kai ta dyo.
 }

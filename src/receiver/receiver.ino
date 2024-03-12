@@ -27,7 +27,7 @@
   #define DEBUG_PRINT(x)
   #define DEBUG_PRINTLN(x)
 
-  const uint8_t RADIO_PA_LEVEL = RF24_PA_LOW;
+  const uint8_t RADIO_PA_LEVEL = RF24_PA_MAX;
 #endif
 
 RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
@@ -66,8 +66,8 @@ void setup(void) {
     }
   }
 
-  //radio.setDataRate(RF24_250KBPS);
-  radio.setDataRate(RF24_1MBPS);
+  radio.setDataRate(RF24_250KBPS);
+  //radio.setDataRate(RF24_1MBPS);
   radio.setPALevel(RADIO_PA_LEVEL);
   radio.setChannel(SECRET_RADIO_CHANNEL);
   radio.setPayloadSize(PAYLOAD_SIZE); 
