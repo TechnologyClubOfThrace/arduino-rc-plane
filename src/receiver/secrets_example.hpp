@@ -12,5 +12,5 @@
  * ALLWAYS IGNORE secrets.hpp from git.
  */
 
-// const byte PIPE_ADDRESS[5] = {'A', 'B', 'C', 'D', '1'};
+// const byte SECRET_PIPE_ADDRESS[6] = {'A', 'B', 'C', 'D', '1'};
 // const uint8_t SECRET_RADIO_CHANNEL = 87;
