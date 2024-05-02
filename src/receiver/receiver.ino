@@ -33,7 +33,7 @@
 RF24 radio(9, 8);  // nRF24L01(+) radio attached using Getting Started board
 
 // Customize here pulse lengths as needed on the ESC docs
-const int MIN_THROTTLE_PULSE_LENGTH = 1000; // Minimum pulse length in µs
+const int MIN_THROTTLE_PULSE_LENGTH = 1025; // Minimum pulse length in µs
 const int MAX_THROTTLE_PULSE_LENGTH = 2000; // Maximum pulse length in µs
 
 // Customize here the servo angle as needed on the servo docs
